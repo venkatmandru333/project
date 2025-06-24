@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('gitclone') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/venkatmandru333/project.git']])
+            }
+        }
+        stage('terrform'){
+            steps {
+                sh "terraform init"
+                sh "terraform plan -out=tfplan.out"
+                sh "terraform apply -auto-approve tfplan.out"
+            }
+        }
+    }
+}
